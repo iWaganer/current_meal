@@ -42,14 +42,27 @@ function getComment(meal: MealType): string {
 export default function HomePage() {
   const [now, setNow] = useState<Date | null>(null);
   const [meal, setMeal] = useState<MealType | null>(null);
+  const [comments, setComment] = useState<string>("");
 
   useEffect(() => {
-    const d = new Date();
-    setNow(d);
-    setMeal(getMealType(d));
-    const timer = setInterval(() => {
-      setNow(new Date());
-    }, 1000);
+    const update = () => {
+      const d = new Date();
+      setNow(d);
+      const newMeal = getMealType(d);
+
+      setMeal((prev) => {
+        if (prev !== newMeal) {
+          setComment(getComment(newMeal));
+        }
+        return newMeal;
+      });
+    };
+
+    update(); // 初回即実行
+
+    // 1秒ごとに判定
+    const timer = setInterval(update, 1000);
+
     return () => clearInterval(timer);
   }, []);
 

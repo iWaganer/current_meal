@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-type MealType = "朝食" | "昼食" | "おやつ" | "夕食" | "夜食";
+type MealType = "朝食" | "昼食" | "夕食" | "夜食";
 
 function getMealType(date: Date): MealType {
   const hour = date.getHours();
@@ -13,18 +13,30 @@ function getMealType(date: Date): MealType {
 }
 
 function getComment(meal: MealType): string {
-  switch (meal) {
-    case "朝食":
-      return "今日も一日がんばりましょう";
-    case "昼食":
-      return "午後も無理せずいきましょう";
-    case "おやつ":
-      return "ほどほどにね";
-    case "夕食":
-      return "一日おつかれさまです";
-    case "夜食":
-      return "今食べるくらいなら明日早起きして朝食を食べましょう";
-  }
+  const comments: Record<MealType, string[]> = {
+    "朝食": [
+      "この時間に起きてるのは偉すぎる。飯を食って良い。",
+      "朝起きると一日が長く感じるよな。",
+      "朝飯食べると昼飯いらない気がする。わからん？"
+    ],
+    "昼食": [
+      "生命の源。ここの質が一日の質を決める。",
+      "昼はあげもの。やうやう白く炊きゆく米ぎは……",
+      "昼寝をすると一日を消費してしまうのでなんでもいいから動け。"
+    ],
+    "夕食": [
+      "食わなくても耐える。食った方が幸せ。1マス進む。",
+      "どうせ使わないのでエネルギー量より味を重視すべき。",
+      "小学生のころは毎日夕食が何かと考えるだけで楽しかったものだが。"
+    ],
+    "夜食": [
+      "今食べるくらいなら明日早起きして朝食を食べましょう。10点減点。",
+      "夏は夜。だが夏の夜食ほど太るものもない。20点減点。",
+      "金。夜食は金がかかる。貴族にでもなったつもりか？ 振り出しにもどる。"
+    ]
+  };
+  const list = comments[meal];
+  return list[Math.floor(Math.random() * list.length)];
 }
 
 export default function HomePage() {
@@ -35,6 +47,10 @@ export default function HomePage() {
     const d = new Date();
     setNow(d);
     setMeal(getMealType(d));
+    const timer = setInterval(() => {
+      setNow(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
   }, []);
 
   const timeString =

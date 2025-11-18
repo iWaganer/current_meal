@@ -1,65 +1,81 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+
+type MealType = "朝食" | "昼食" | "おやつ" | "夕食" | "夜食";
+
+function getMealType(date: Date): MealType {
+  const hour = date.getHours();
+
+  if (hour >= 5 && hour < 10) return "朝食";
+  if (hour >= 10 && hour < 15) return "昼食";
+  if (hour >= 15 && hour < 18) return "おやつ";
+  if (hour >= 18 && hour < 23) return "夕食";
+  return "夜食";
+}
+
+function getComment(meal: MealType): string {
+  switch (meal) {
+    case "朝食":
+      return "ちゃんと朝ごはん食べた？ 起きてるだけでえらい。";
+    case "昼食":
+      return "お昼！ 作業の前にとりあえず糖分入れとこ。";
+    case "おやつ":
+      return "おやつの時間です。カロリーはゼロということにしておく。";
+    case "夕食":
+      return "夕飯タイム。今日も一日おつかれ。";
+    case "夜食":
+      return "それ本当に今食べる？ 明日の自分に聞いてからでも遅くない。";
+    default:
+      return "";
+  }
+}
+
+export default function HomePage() {
+  const [now, setNow] = useState<Date | null>(null);
+  const [meal, setMeal] = useState<MealType | null>(null);
+
+  useEffect(() => {
+    const d = new Date();
+    setNow(d);
+    setMeal(getMealType(d));
+  }, []);
+
+  const timeString =
+    now &&
+    new Intl.DateTimeFormat("ja-JP", {
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(now);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main className="min-h-screen flex items-center justify-center bg-slate-900 text-slate-50">
+      <div className="max-w-md w-full px-6 py-8 rounded-2xl bg-slate-800 shadow-lg">
+        <h1 className="text-2xl font-bold mb-4 text-center">
+          今は何ごはんタイム？
+        </h1>
+
+        {meal && (
+          <>
+            <p className="text-center text-lg mb-2">いまは…</p>
+            <p className="text-center text-4xl font-extrabold mb-4">
+              {meal}
+            </p>
+          </>
+        )}
+
+        {timeString && (
+          <p className="text-center text-sm text-slate-300 mb-4">
+            現在時刻：{timeString}
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+        )}
+
+        {meal && (
+          <p className="text-center text-sm text-slate-200">
+            {getComment(meal)}
+          </p>
+        )}
+      </div>
+    </main>
   );
 }

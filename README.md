@@ -17,8 +17,6 @@ https://current-meal.vercel.app/
 - 各食事区分におけるランダムなひとことコメントの表示
 
 ## セットアップ
-```## セットアップ
-
 ```bash
 git clone https://github.com/iWaganer/current_meal
 cd client

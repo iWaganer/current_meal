@@ -87,18 +87,18 @@ export default function HomePage() {
         現在の食事区分は……
       </p>
 
-      {/* n食です（横並び） */}
+      {/* n食です */}
       <div className="relative w-full flex justify-center mb-32">
-        {/* 中央に大きな「n食」 */}
+        {/* n食 */}
         <p className="text-6xl font-bold text-center">{meal}</p>
 
-        {/* 「n食」の右側に小さく「です」を付ける */}
+        {/* です */}
         <p className="text-2xl absolute top-1/2 translate-y-[-50%] ml-[calc(50%+2rem)]">
           です
         </p>
       </div>
 
-      {/* コメント（画面下寄り） */}
+      {/* コメント */}
       <p className="text-xl mt-auto mb-16 text-center px-4 leading-relaxed">
         {meal && getComment(meal)}
       </p>
